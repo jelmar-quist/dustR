@@ -1,12 +1,18 @@
 Package: dustR
-Title: What the Package Does (One Line, Title Case)
+Title: Tidying GeoMx Whole Transcriptome Atlas spatial transcriptomics data in R
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    c(person("Jelmar", "Quist", , "jelmar.quist@kcl.ac.uk", role = c("aut", "cre")),
+    person("Isobelle", "Wall", , "isobelle.wall@kcl.ac.uk", role = c("ctb")))
+Description: Designed to optimise quality assurance of GeoMx Whole Transcriptome Atlas (WTA) spatial transcriptomics data by decreasing segment loss and increasing gene detection rates.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Imports: 
+    GeomxTools,
+    ggplot2,
+    mclust,
+    reshape2,
+    robustbase,
+    scales
