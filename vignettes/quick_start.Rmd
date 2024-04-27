@@ -1,0 +1,124 @@
+---
+title: "A quick start guide to the dustR package"
+author: "Jelmar Quist, Isobelle Wall"
+date: "`r Sys.Date()`"
+output: 
+  BiocStyle::html_document:
+    toc: TRUE
+    number_sections: TRUE
+    theme: cosmo
+    highlight: tango
+    code_folding: show
+vignette: >
+  %\VignetteIndexEntry{quick_start}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{=html}
+<style type="text/css">
+  body{
+  font-size: 12;
+}
+</style>
+```
+
+```{css global-setup-css, include = FALSE}
+
+h1{color: #0072FF !important; font-weight: bold !important}
+h2{color: #13C800 !important; font-weight: bold !important}
+h3{color: #000000 !important; font-weight: bold !important}
+h4{color: #000000 !important}
+
+```
+
+# dustR <img src="~/man/figures/logo.png" align="right" height="118" alt="" />
+
+```{r message=FALSE, warning=FALSE, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, dpi = 80)
+```
+
+# Introduction
+
+# Installation
+The development version of `dustR` can be installed from GitHub:
+
+```{r, eval=FALSE}
+devtools::install_github("jelmar-quist/dustR")
+```
+
+# Quick start
+```{r setup}
+library(dustR)
+library(GeomxTools)
+library(scales)
+library(robustbase)
+library(mclust)
+library(reshape)
+```
+
+```{r loadData}
+load("/Users/k1217281/Documents/GeoMX/EllieAlberts/materials/v2/eset.RData")
+```
+
+Check No Template Controls (NTCs)
+```{r checkNTCs}
+dim(eSet)
+checkNTC(eSet)
+plotNTC(eSet)
+checkNTCcounts(eSet)
+```
+
+Remove NTCs
+```{r removeNTCs}
+dim(eSet)
+eSet <- eSet[,grep("A01", colnames(eSet), invert = TRUE)]
+dim(eSet)
+```
+
+Inspect negative control probes
+```{r filterNegativeProbes}
+dim(eSet)
+plotNegativeProbes(eSet)
+eSet <- filterNegativeProbes(eSet)
+dim(eSet)
+```
+
+Process data
+```{r processData}
+source("/Users/k1217281/Documents/resources/GeoMx/calculateNegativeProbe.R")
+eSet <- shiftCountsOne(eSet)
+eSet <- calculateNegativeProbe(eSet)
+```
+
+Number of nuclei versus area size
+```{r checkNuclei}
+eSet <- checkNuclei(eSet)
+plotNuclei(eSet)
+```
+
+Area size versus number of sequencing reads
+```{r checkRawSequencing}
+eSet <- checkRawSequencing(eSet)
+plotRawSequencing(eSet)
+```
+
+Sequencing saturation
+```{r checkSaturation}
+eSet <- checkSaturation(eSet)
+plotSaturation(eSet)
+```
+
+Geometric mean of negative control probes
+```{r checkGeoMeanNegProbes}
+plotGeoMeanNegProbes(eSet)
+eSet <- checkGeoMeanNegProbes(eSet)
+```
+
+Filter segments
+```{r filterSegments}
+dim(eSet)
+plotFilterSegments(eSet)
+eSet <- filterSegments(eSet)
+dim(eSet)
+```

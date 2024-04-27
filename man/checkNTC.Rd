@@ -2,20 +2,18 @@
 % Please edit documentation in R/checkNTC.R
 \name{checkNTC}
 \alias{checkNTC}
-\title{Checks the performance of NTCs}
+\title{No Template Control assessment}
 \usage{
-checkNTC(eSet = eSet, Raw = "Raw")
+checkNTC(eSet)
 }
 \arguments{
-\item{eSet}{A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().}
-
-\item{Raw}{Name of the column containing the number of raw sequencing reads.}
+\item{eSet}{A NanoStringGeoMxSet object.}
 }
 \value{
 Nothing.
 }
 \description{
-Checks the performance of the No Template Control (NTC) in a GeoMx DSP experiment.
+A No Template Control (NTC) is included in each sequencing plate (well A01) to detect contamination of the sequencing library. NTCs with more than 1,000 sequencing reads could indicate contamination and should be examined further.
 }
 \examples{
 checkNTC(eSet)

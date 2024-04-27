@@ -13,6 +13,11 @@ Imports:
     GeomxTools,
     ggplot2,
     mclust,
+    reshape,
     reshape2,
     robustbase,
     scales
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

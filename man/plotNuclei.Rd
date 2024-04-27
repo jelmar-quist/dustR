@@ -8,10 +8,6 @@ plotNuclei(eSet = eSet)
 }
 \arguments{
 \item{eSet}{A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().}
-
-\item{Nuclei}{The column containing the nuclei counts.}
-
-\item{Area}{The column containing the area size.}
 }
 \value{
 A ggplot2 object.

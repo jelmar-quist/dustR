@@ -1,16 +1,14 @@
-#' Check Negative Control Probes
-#' @description Geometric mean of the negative control probes determines the limit of quantification and subsequentially the gene detection rate. Segments with a low geometric mean are flagged.
-#'
-#' @param eSet A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().
-#' @param minNegGeoMean Segments below this threshold are flagged. Default is 1.
-#' @param NegGeoMean The column reporting the geometric mean of the negative control probes.
+#' Assessment of NegGeoMean
+#' @description The geometric mean of the negative control probes (NegGeoMean) is used to distinguish signal from noise and determines the quantifiable limit of gene expression. Segments with a very low NegGeoMean often exhibit low gene detection rates.
+#' @param eSet A NanoStringGeoMxSet object.
+#' @param minNegGeoMean Threshold to define the minimum required NegGeoMean. Default is 1.
 #'
 #' @return A readNanoStringGeoMxSet object.
 #' @export
 #'
 #' @examples
 #' checkGeoMeanNegProbes(eSet)
-checkGeoMeanNegProbes <- function(eSet = eSet, minNegGeoMean = 1, NegGeoMean = "NegGeoMean") {
+checkGeoMeanNegProbes <- function(eSet, minNegGeoMean = 1) {
 
   eSet$NegProbes <- ifelse(eSet$NegGeoMean <= minNegGeoMean, TRUE, FALSE)
 

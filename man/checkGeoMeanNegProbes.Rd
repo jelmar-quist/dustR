@@ -2,26 +2,20 @@
 % Please edit documentation in R/checkGeoMeanNegProbes.R
 \name{checkGeoMeanNegProbes}
 \alias{checkGeoMeanNegProbes}
-\title{Check Negative Control Probes}
+\title{Assessment of NegGeoMean}
 \usage{
-checkGeoMeanNegProbes(
-  eSet = eSet,
-  minNegGeoMean = 1,
-  NegGeoMean = "NegGeoMean"
-)
+checkGeoMeanNegProbes(eSet, minNegGeoMean = 1)
 }
 \arguments{
-\item{eSet}{A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().}
+\item{eSet}{A NanoStringGeoMxSet object.}
 
-\item{minNegGeoMean}{Segments below this threshold are flagged. Default is 1.}
-
-\item{NegGeoMean}{The column reporting the geometric mean of the negative control probes.}
+\item{minNegGeoMean}{Threshold to define the minimum required NegGeoMean. Default is 1.}
 }
 \value{
 A readNanoStringGeoMxSet object.
 }
 \description{
-Geometric mean of the negative control probes determines the limit of quantification and subsequentially the gene detection rate. Segments with a low geometric mean are flagged.
+The geometric mean of the negative control probes (NegGeoMean) is used to distinguish signal from noise and determines the quantifiable limit of gene expression. Segments with a very low NegGeoMean often exhibit low gene detection rates.
 }
 \examples{
 checkGeoMeanNegProbes(eSet)

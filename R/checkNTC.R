@@ -1,14 +1,13 @@
-#' Checks the performance of NTCs
-#' @description Checks the performance of the No Template Control (NTC) in a GeoMx DSP experiment.
-#' @param eSet A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().
-#' @param Raw Name of the column containing the number of raw sequencing reads.
+#' No Template Control assessment
+#' @description A No Template Control (NTC) is included in each sequencing plate (well A01) to detect contamination of the sequencing library. NTCs with more than 1,000 sequencing reads could indicate contamination and should be examined further.
+#' @param eSet A NanoStringGeoMxSet object.
 #'
 #' @return Nothing.
 #' @export
 #'
 #' @examples
 #' checkNTC(eSet)
-checkNTC <- function(eSet = eSet, Raw = "Raw") {
+checkNTC <- function(eSet) {
 
   # Identify NTC containing >= 1000 sequencing reads
   eSet_NTC <- eSet[,grep("A01", fixed = TRUE, colnames(eSet))]

@@ -1,8 +1,6 @@
 #' Plot Nuclei versus Area
 #' @description Plots the relationship between the number of nuclei and the area size to identify poor performing segments.
 #' @param eSet A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().
-#' @param Nuclei The column containing the nuclei counts.
-#' @param Area The column containing the area size.
 #'
 #' @return A ggplot2 object.
 #' @export

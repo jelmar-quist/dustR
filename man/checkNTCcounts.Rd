@@ -2,20 +2,18 @@
 % Please edit documentation in R/checkNTCcounts.R
 \name{checkNTCcounts}
 \alias{checkNTCcounts}
-\title{Check NTC count uniformity}
+\title{No Template Control count uniformity}
 \usage{
-checkNTCcounts(eSet, Raw = "Raw")
+checkNTCcounts(eSet)
 }
 \arguments{
-\item{eSet}{A NanoStringGeoMxSet acquired via readNanoStringGeoMxSet().}
-
-\item{Raw}{Name of the column containing the number of raw sequencing reads.}
+\item{eSet}{A NanoStringGeoMxSet object.}
 }
 \value{
 A ggplot2 object.
 }
 \description{
-Plots a histogram of counts for each NTC to assess uniformity.
+In No Template Controls (NTCs) with more than 1,000 sequencing reads, counts are expected to be uniformly distributed (i.e. detected at a similar abundances). This is assessed by comparing the gene count distribution of each NTC with a uniform distribution of comparable parameters using a Kolmogorov–Smirnov test.
 }
 \examples{
 checkNTCcounts(eSet)
