@@ -13,9 +13,20 @@ knitr::opts_chunk$set(
 )
 ```
 
+```{r echo=FALSE, results="hide", message=FALSE}
+library("badger")
+```
+
 # dustR <img src="man/figures/logo.png" align="right" height="118" alt="" />
 
 <!-- badges: start -->
+```{r, echo = FALSE, results = "asis"}
+cat(
+  badge_devel("dustR", "blue"),
+  badge_repostatus("Active"),
+  badge_lifecycle(stage = "experimental")
+)
+```
 <!-- badges: end -->
 
 

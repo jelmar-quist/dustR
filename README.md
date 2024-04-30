@@ -4,8 +4,13 @@
 # dustR <img src="man/figures/logo.png" align="right" height="118" alt="" />
 
 <!-- badges: start -->
-<!-- badges: end -->
 
+[![](https://img.shields.io/badge/devel%20version-0.0.0.9000-blue.svg)](https://github.com/dustR)
+[![Project Status: Active - The project has reached a stable, usable
+state and is being actively
+developed.](https://www.repostatus.org/badges/latest/active.svg)](https://www.repostatus.org/#active)
+[![](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+<!-- badges: end -->
 
 ## Overview
 
