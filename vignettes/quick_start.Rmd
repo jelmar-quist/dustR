@@ -1,53 +1,46 @@
 ---
-title: "A quick start guide to the dustR package"
+title: "A guide to the dustR package"
 author: "Jelmar Quist, Isobelle Wall"
 date: "`r Sys.Date()`"
 output: 
-  BiocStyle::html_document:
-    toc: TRUE
-    number_sections: TRUE
+  html_document:
     theme: cosmo
     highlight: tango
-    code_folding: show
+    toc: yes
+    toc_float:
+      collapsed: true
 vignette: >
   %\VignetteIndexEntry{quick_start}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{=html}
 <style type="text/css">
   body{
-  font-size: 12;
+  font-size: 12pt;
 }
 </style>
-```
-
-```{css global-setup-css, include = FALSE}
-
-h1{color: #0072FF !important; font-weight: bold !important}
-h2{color: #13C800 !important; font-weight: bold !important}
-h3{color: #000000 !important; font-weight: bold !important}
-h4{color: #000000 !important}
-
-```
-
-# dustR <img src="~/man/figures/logo.png" align="right" height="118" alt="" />
 
 ```{r message=FALSE, warning=FALSE, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE, dpi = 80)
+knitr::opts_chunk$set(echo = TRUE, message = TRUE, warning = FALSE, dpi = 80, out.width = "80%")
 ```
 
 # Introduction
+In this vignette we present `dustR`, an alternative data analysis workflow for GeoMx Whole Transcriptome Atlas (WTA) spatial transcriptomics data. This R pacakge provides a series of functions that assist in the quality assurance while minimising segment loss and maximising gene detection rates.
 
 # Installation
 The development version of `dustR` can be installed from GitHub:
 
 ```{r, eval=FALSE}
+if (!require("devtools", quietly = TRUE))
+    install.packages("devtools")
+
 devtools::install_github("jelmar-quist/dustR")
 ```
 
+
 # Quick start
+
 ```{r setup}
 library(dustR)
 library(GeomxTools)
@@ -57,68 +50,154 @@ library(mclust)
 library(reshape)
 ```
 
+
+## Data
+We recommend loading the data similiar to...
+
 ```{r loadData}
 load("/Users/k1217281/Documents/GeoMX/EllieAlberts/materials/v2/eset.RData")
 ```
 
-Check No Template Controls (NTCs)
+
+## No template control
+A No Template Control (NTC) is used to assess contamination of the segments on the 96-well plate. As a general rule, NTCs with more than 1,000 but less than 10,000 sequencing reads may indicate contamination.
+count: values >1,000 could indicate contamination for the segments associated with this NTC; however, in cases where the NTC count is between 1,000- 10,000, the segments may be used if the NTC data is uniformly low (e.g. 0-2 counts for all probes).
+
+`checkNTC` identifies the NTCs in the `NanoStringGeoMxSet` object and reports (i) the number of NTCs containing more than 1,000 sequencing reads, and (ii) the number of segments that are at risk of contamination.
+
 ```{r checkNTCs}
-dim(eSet)
 checkNTC(eSet)
+```
+
+
+`plotNTC` can be used to plot the number of sequencing reads for each NTC.
+
+```{r plotNTC}
 plotNTC(eSet)
+```
+
+
+Due to the risk of contamination in NTCs with more than 10,000 sequencing reads, we would recommend to discard any segments originating from that same 96 well plate. For NTCs with more than 1,000, but less than 10,000 sequencing reads, if the gene count distribution is uniform (i.e. all genes are present at a similar level within that NTC), segments from that 96 well plate can be used for further analysis. `checkNTCcounts` assess and plot the gene counts distribution of each NTC.
+
+```{r checkNTCcounts}
 checkNTCcounts(eSet)
 ```
 
-Remove NTCs
+
+Based on the findings above, segments likely to be contaminated should be removed, along with the NTCs. In this vignette, we only remove the NTCs themselves.
+
 ```{r removeNTCs}
-dim(eSet)
 eSet <- eSet[,grep("A01", colnames(eSet), invert = TRUE)]
-dim(eSet)
 ```
 
-Inspect negative control probes
-```{r filterNegativeProbes}
-dim(eSet)
+
+## Negative control probes
+The GeoMx Whole Transcriptome Atlas (WTA) panel includes 139 negative control probes designed to estimate the background for each segment which could directly affect gene detection rate and any subsequent downstream analysis. Note that the negative control probes are designed to target sequences from the External RNA Controls Consortium (ERCC), which are not present in the human genome.
+
+With `plotNegativeProbes`, the slope between overall abundance of each negative control probe and the number of sequencing reads is estimated.
+
+```{r plotNegativeProbes}
 plotNegativeProbes(eSet)
-eSet <- filterNegativeProbes(eSet)
-dim(eSet)
 ```
 
-Process data
+
+Assuming all negative control probes are present at an equal abundance, this slope should be more or less similar between the 139 negative control probes. The density plot from `plotNegativeProbes` suggests that for the majority of the negative control probes this indeed the case. However, for 5 negative control probes, their slope is considerably more steep, resulting in increased background and reduced gene detection rates. We suggest to remove these negative control probes using `filterNegativeProbes`.
+
+```{r filterNegativeProbes}
+eSet <- filterNegativeProbes(eSet)
+```
+
+
+## Processing
+Following the inspection of the NTCs and the cleaning of negative control probes, processing of the data can continue.
+
 ```{r processData}
 source("/Users/k1217281/Documents/resources/GeoMx/calculateNegativeProbe.R")
 eSet <- shiftCountsOne(eSet)
 eSet <- calculateNegativeProbe(eSet)
 ```
 
-Number of nuclei versus area size
+
+After processing the data, we inspect four more segment characteristics to identify poor performing segments, as describes below.
+
+
+## Nuclei and area
+The relationship between the number of nuclei and the segment area provide insight in the performance of the segmentation and the nuclei count for a given segment. A positive relation between nuclei and area is expected. Using `checkNuclei`, segments where this relationship deviates from the regression model are flagged.
+
 ```{r checkNuclei}
 eSet <- checkNuclei(eSet)
+```
+
+
+We can further visualise and inspect these findings using `plotNuclei`.
+
+```{r plotNuclei}
 plotNuclei(eSet)
 ```
 
-Area size versus number of sequencing reads
+
+Segments that deviate from the model will be highlighted by a black outline. In the data presented in this vignette, all segments performed as expected.
+
+
+## Area and sequencing reads
+As per the recommendqations, the sequencing libraries should be prepared with ~100 sequencing reads per µm2 for each segment. By modelling the relationship between the area and the number of sequencing reads, segments with less sequencing reads than expected based on the area can be identified. This could be a result of the tissue quality or the incorrect pooling of the sequencing libraries.
+
 ```{r checkRawSequencing}
 eSet <- checkRawSequencing(eSet)
+```
+
+
+`checkRawSequencing` suggests 12 segments had considerably less sequencing reads than expected based on their area. We can visualise and inspect this in more detail using `plotRawSequencing`.
+
+```{r plotRawSequencing}
 plotRawSequencing(eSet)
 ```
 
-Sequencing saturation
+
+This plot suggests that while for for the majority of segments the number of sequencing reads is as expected, for some, the number of sequencing reads is less than expected, indiated by a black outline. We suggest to discard these segments.
+
+
+## Sequencing saturation
+The sequencing saturation provides information about the quality of the sequencing and if enoughn was sequenced to capture the full diversity of the segment. `checkSaturation` calculates the sequencing saturation and flags segments with a saturation below 50% (default).
+
 ```{r checkSaturation}
 eSet <- checkSaturation(eSet)
+```
+
+
+73 segments were flagged as having reduced sequencing saturation. We can visualise and inspect the saturation further using `plotSaturation`.
+
+```{r plotSaturation}
 plotSaturation(eSet)
 ```
 
-Geometric mean of negative control probes
-```{r checkGeoMeanNegProbes}
+While the median saturation is 80%, there are some samples that have a sequencing saturation below 50%. For further analysis at this time, we suggest these segments to be discarded. However, in practice, you could opt to resequence these segments to improve their saturation.
+
+
+## Geometric mean of negative control probes
+To calculate the background noise of each segments, the geometric mean of the negative control probes is used. We can assess the geometric mean across all segments using `plotGeoMeanNegProbes`.
+
+```{r plotGeoMeanNegProbes}
 plotGeoMeanNegProbes(eSet)
+```
+
+
+The barplot highlight the large range of the geometric mean across the segments. Overall, a low geometric mean is considered good, however, segments with a geometric mean that is too low (default 1) tend to have a poor gene detection rate. These segments can be flagged using `checkGeoMeanNegProbes`.
+
+```{r checkGeoMeanNegProbes}
 eSet <- checkGeoMeanNegProbes(eSet)
 ```
 
-Filter segments
-```{r filterSegments}
-dim(eSet)
+
+Not only does this function flag segments with a low geometric mean, it also calculates the average gene detection rate for these segments and compares it with the remaining segments. Given that the gene detection rate in segments with a geometric mean of the negative control probes is less than 1%, we suggest these to be discarded.
+
+
+## Filter segments
+
+```{r plotFilterSegments}
 plotFilterSegments(eSet)
+```
+
+```{r filterSegments}
 eSet <- filterSegments(eSet)
-dim(eSet)
 ```

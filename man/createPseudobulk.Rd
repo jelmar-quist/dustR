@@ -4,12 +4,12 @@
 \alias{createPseudobulk}
 \title{Generates pseudobulk data}
 \usage{
-createPseudobulk(eSet, id.vars)
+createPseudobulk(eSet, id.vars, bySlide = TRUE)
 }
 \arguments{
 \item{eSet}{A NanoStringGeoMxSet object.}
 
-\item{id.vars}{Variable corresponding to the column name used for melting.}
+\item{id.vars}{Variable corresponding to the column name used for melting. If not suplied, pseudobulk per ROI will be generated instead.}
 }
 \value{
 A readNanoStringGeoMxSet object.

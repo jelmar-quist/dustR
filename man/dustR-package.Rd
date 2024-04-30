@@ -6,6 +6,8 @@
 \alias{dustR-package}
 \title{dustR: Tidying GeoMx Whole Transcriptome Atlas spatial transcriptomics data in R}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Designed to optimise quality assurance of GeoMx Whole Transcriptome Atlas (WTA) spatial transcriptomics data by decreasing segment loss and increasing gene detection rates.
 }
 \author{
