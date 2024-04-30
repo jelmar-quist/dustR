@@ -15,7 +15,7 @@ plotRawSequencing <- function(eSet = eSet, Area = "Area", Raw = "Raw") {
 
   plotRawSequencing <- ggplot(pData(eSet), aes(x = Area+1, y = Raw, fill = Segment, colour = AreaReads)) +
     geom_point(shape = 21, size = 4, stroke = 1) +
-    geom_smooth(method = "glm",  colour = "black", se = FALSE, show.legend = FALSE, aes(fill = NULL, colour = NULL)) +
+    geom_smooth(method = "glm", formula = y ~ x, colour = "black", se = FALSE, show.legend = FALSE, aes(fill = NULL, colour = NULL)) +
     scale_colour_manual(values = c(rgb(0, 0, 0, alpha = 0), "black")) +
     geom_vline(xintercept = 5000+1, linetype = "dashed") +
     geom_hline(yintercept = 1000+1, linetype = "dashed") +
