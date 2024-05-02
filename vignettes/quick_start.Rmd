@@ -218,7 +218,7 @@ eSet <- filterSegments(eSet)
 `createPseudobulk` does exactly what the name implies, it creates pseudobulk data by aggregating the gene counts from all segments for a given sample. The function also updates the Segment, Nulcei and Area columns, as well as the reported number of sequencing reads. Sample definitions are obtained from `id.vars`, which should specificy the appropiate column in the pData.
 
 
-```{r eSet_pseudobulk_bySlide}
+```{r createPseudobulk_bySlide}
 load("/Users/k1217281/Documents/GeoMX/EllieAlberts/materials/v2/eset.RData")
 eSet_pseudobulk <- createPseudobulk(eSet, id.vars = "Slide Name")
 ncol(eSet)
@@ -228,7 +228,7 @@ ncol(eSet_pseudobulk)
 
 A second flavour of the function was implemented to generate pseudobulk for each ROI. I.e. if for a given ROI there are a PanCK and a CD45 segment, these segments will be collated together. Note that the function still requires the user to specify the appropiate `id.vars` to prevent segments from different samples to be aggregated.
 
-```{r eSet_pseudobulk_byROI}
+```{r createPseudobulk_byROI}
 load("/Users/k1217281/Documents/GeoMX/EllieAlberts/materials/v2/eset.RData")
 eSet_pseudobulk <- createPseudobulk(eSet, id.vars = "Slide Name", bySlide = FALSE)
 ncol(eSet)
@@ -237,3 +237,18 @@ ncol(eSet_pseudobulk)
 
 
 After creating pseudobulk data it is recommended to perform a quality control.
+
+
+## SpatialGE
+`spatialGE` is an R package design for analysing and visualising spatial transcriptomics data.
+
+
+```{r createSTlist}
+require(spatialGE)
+
+load("/Users/k1217281/Documents/GeoMX/LEAP_SA_v3/materials/SA_ReadInOnly.RData")
+eSet <- eSet[,!is.na(eSet$Segment)]
+eSet <- eSet[,eSet$Segment == "PanCK+"]
+
+eSet_STlist <- createSTlist(eSet, id.vars = "LEAP_ID")
+```
